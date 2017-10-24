@@ -1,0 +1,543 @@
+from readingjp import *
+"""
+clean_words[0]["口"]
+{'jlpt': 4, 'radicals': [('classical', 30)], 'char': '口', 'freq': 284, 'pinyin': ['kou3'], 'meanings': ['mouth'], 'readings': {'kunyomi': ['くち'], 'onyomi': ['ク', 'コウ']}, 'tags': ['simple', 'heisig', '500', 'kyoiku', 'kic500', 'kklc500', 'rmjf500', 'kkld', 'JLPT 4', 'heisig500', 'henshall', 'joyo', 'Grade 1', 'kklc', 'kanji_in_context'], 'dic_numbers': [('maniette', '11'), ('nelson_c', '868'), ('sakade', '27'), ('kodansha_compact', '276'), ('oneill_names', '29'), ('jf_cards', '31'), ('henshall3', '34'), ('heisig', '11'), ('nelson_n', '685'), ('sh_kk', '54'), ('tutt_cards', '16'), ('crowley', '200'), ('busy_people', '2.16'), ('oneill_kk', '38'), ('halpern_njecd', '3382'), ('henshall', '20'), ('gakken', '213'), ('moro', '3227'), ('kanji_in_context', '<16></16>7'), ('halpern_kkld', '2119')], 'stroke_count': 3, 'grade': 1}
+"""
+radicals = []
+
+for k in clean_words[0].keys():
+   radicals.append((k, clean_words[0][k]['radicals']))
+
+radicalset = set()
+for k in clean_words[0].keys():
+   radicalset.add(str(clean_words[0][k]['radicals']))
+
+kanjirads = None
+radrows = []
+with open('kanji_with_radicals.csv') as infile:
+   kanjirads = csv.reader(infile, delimiter="\t")
+   for row in kanjirads:
+     radrows.append(row)
+"""
+radrows[1]
+['蟇', 'nelson_c 140', 'classical 142']
+"""
+
+for i in range(len(radrows)):
+   char = radrows[i][0]
+   radicals = [r for r in radrows[i][1:]]
+   raddict[char] = {"char": char, "radicals": radicals}
+
+"""
+raddict["蟇"]
+{'radicals': ['nelson_c 140', 'classical 142'], 'char': '蟇'}
+raddict["蟇"]["radicals"]
+['nelson_c 140', 'classical 142']
+"""
+
+for k, v in raddict.items():
+   for r in raddict[k]["radicals"]:
+     for x, y in raddict.items():
+       if r in raddict[x]["radicals"]:
+         raddict[k][x] = r
+
+
+['噫', 'classical 30', '']
+>>> raddict = {}
+>>> for i in len(radrows):
+...     for char, rad, arad in radrows[i]:
+...         raddict
+  File "<stdin>", line 3
+    raddict
+          ^
+TabError: inconsistent use of tabs and spaces in indentation
+>>> for i in len(radrows):
+...   for char, rad, arad in radrows[i]:
+...     raddict[char]["radicals"] = tuple(rad, arad)
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'int' object is not iterable
+>>> type(radrows)
+<class 'list'>
+>>> for i in range(len(radrows)):
+...   for char, rad, arad in radrows[i]:
+...     raddict[char]["radicals"] = tuple(rad, arad)
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ValueError: not enough values to unpack (expected 3, got 1)
+>>> for i in range(len(radrows)):
+...   for char, rad, arad in radrows[i]:
+...     raddict[char]["char"] = char
+...     raddict[char]["radicals"] = rad, arad
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ValueError: not enough values to unpack (expected 3, got 1)
+>>> for i in range(len(radrows)):
+...     raddict[char]["char"] = char
+...   
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+KeyError: '頻'
+>>> radrows[0]
+['蟇', 'nelson_c 140', 'classical 142']
+>>> radrows[0][0]
+'蟇'
+>>> radrows[0][2]
+'classical 142'
+>>> radrows[1][2]
+''
+>>> radrows[1][1]
+'classical 30'
+>>> for i in range(len(radrows)):
+...   raddict[char] = {}
+...   raddict[char]["char"] = char
+... 
+>>> for i in range(len(radrows)):
+...   raddict[char]["radicals"] = [r for r in radrows[i][1:]]
+... 
+>>> raddict["蟇"]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '蟇'
+>>> len(raddict)
+1
+>>> raddict[蟇]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name '蟇' is not defined
+>>> raddict["蟇"]["char"]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '蟇'
+>>> raddict
+{'頻': {'radicals': ['classical 116', ''], 'char': '頻'}}
+>>> for i in range(len(radrows)):
+...   raddict[char]["char"] = char
+... 
+>>> for i in range(len(radrows)):
+...   raddict[char]["radicals"] = [r for r in radrows[i][1:]]
+... 
+>>> raddict["蟇"]["char"]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '蟇'
+>>> raddict["蟇"]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '蟇'
+>>> raddict
+{'頻': {'radicals': ['classical 116', ''], 'char': '頻'}}
+>>> len(radrows)
+13108
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   raddict[char]["char"] = char
+...   radicals = [r for r in radrows[i][1:]]
+...   raddict[char]["radicals"] = radicals
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+KeyError: '蟇'
+>>> radict
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'radict' is not defined
+>>> raddict
+{'頻': {'radicals': ['classical 116', ''], 'char': '頻'}}
+>>> type(raddict)
+<class 'dict'>
+>>> for i in range(len(radrows)):
+...   raddict[char]["char"] = char
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+KeyError: '蟇'
+>>> for i in range(len(radrows)):
+...   raddict[char] = {}
+... 
+>>> raddict["蟇"]
+{}
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   raddict[char]["char"] = char
+...   radicals = [r for r in radrows[i][1:]]
+...   raddict[char]["radicals"] = []
+...   raddict[char]["radicals"] = radicals
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+KeyError: '噫'
+>>> raddict
+{'蟇': {'radicals': ['nelson_c 140', 'classical 142'], 'char': '蟇'}, '頻': {'radicals': ['classical 116', ''], 'char': '頻'}}
+>>> for i in range(len(radrows)):
+...   raddict[char]["char"] = char
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+KeyError: '噫'
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   raddict[char]["char"] = char
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+KeyError: '噫'
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   radicals = [r for r in radrows[i][1:]]
+...   raddict[char] = {"char": char, "radicals:" radicals}
+  File "<stdin>", line 4
+    raddict[char] = {"char": char, "radicals:" radicals}
+                                                      ^
+SyntaxError: invalid syntax
+>>> 
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   radicals = [r for r in radrows[i][1:]]
+...   raddict[char] = {"char": char, "radicals": radicals}
+... 
+>>> raddict["蟇"]
+{'radicals': ['nelson_c 140', 'classical 142'], 'char': '蟇'}
+>>> raddict["蟇"]["radicals"]
+['nelson_c 140', 'classical 142']
+>>> for k in raddict.keys():
+...  
+... 
+  File "<stdin>", line 3
+    
+    ^
+IndentationError: expected an indented block
+>>> for k, v in raddict.items():
+...   for r in raddict[k]["radicals"]:
+...     for k, v in raddict.items():
+...       if
+  File "<stdin>", line 4
+    if
+     ^
+SyntaxError: invalid syntax
+>>> 
+>>> for k, v in raddict.items():
+...   for r in raddict[k]["radicals"]:
+...     for x, y in raddict.items():
+...       if r in raddict[x]["radicals"]:
+...         raddict[k][x] = r
+... 
+Killed
+ryan@rubuntu:~/japanese$ python3
+Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> exit
+Use exit() or Ctrl-D (i.e. EOF) to exit
+>>> exit()
+ryan@rubuntu:~/japanese$ cd ~/wbblog
+ryan@rubuntu:~/wbblog$ jekb
+Configuration file: /home/ryan/Dropbox/@WordBrewery/Blog/wordbrewery-blog/_config.yml
+            Source: /home/ryan/Dropbox/@WordBrewery/Blog/wordbrewery-blog
+       Destination: /home/ryan/Dropbox/@WordBrewery/Blog/wordbrewery-blog/_site
+ Incremental build: enabled
+      Generating... 
+                    done in 1.788 seconds.
+ Auto-regeneration: enabled for '/home/ryan/Dropbox/@WordBrewery/Blog/wordbrewery-blog'
+^[[B^C     Halting auto-regeneration.
+ryan@rubuntu:~/wbblog$ cd ~/jap*
+ryan@rubuntu:~/japanese$ python3
+Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import csv
+>>> 
+KeyboardInterrupt
+>>> exit()
+ryan@rubuntu:~/japanese$ 
+ryan@rubuntu:~/japanese$ python3
+Python 3.5.2 (default, Nov 17 2016, 17:05:23) 
+[GCC 5.4.0 20160609] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from csv import DictReader
+>>> from os.path import expandusers
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ImportError: cannot import name 'expandusers'
+>>> from os.path import expanduser
+>>> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>> radrows = []
+>>> with open('kanji_with_radicals.csv') as infile:
+...    kanjirads = csv.reader(infile, delimiter="\t")
+...    for row in kanjirads:
+...      radrows.append(row)
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+NameError: name 'csv' is not defined
+>>> import csv
+>>> with open('kanji_with_radicals.csv') as infile:
+...    kanjirads = csv.reader(infile, delimiter="\t")
+...    for row in kanjirads:
+...      radrows.append(row)
+... 
+>>> len(radrows)
+13109
+>>> radrows[1]
+['並', 'classical 1', 'nelson_c 12']
+>>> for i in range(len(radrows)):
+...   char = radrows[i][0]
+...   rads = radrows[i][1:]
+...   
+... 
+>>> char
+'甘'
+>>> rads
+['classical 99', '']
+>>> radlist = []
+>>> with open('radicallist.txt') as infile:
+...   radlist = infile.readlines()
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: 'radicallist.txt'
+>>> with open('radicallist.txt') as infile:
+...   radlist = infile.readlines()
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+FileNotFoundError: [Errno 2] No such file or directory: 'radicallist.txt'
+>>> with open('radical_list.txt') as infile:
+...   radlist = infile.readlines()
+... 
+>>> radlist[1]
+'classical 2\n'
+>>> for i,v in radlist.enumerate():
+...   radlist[i] = v.strip()
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+AttributeError: 'list' object has no attribute 'enumerate'
+>>> for i,v in enumerate(radlist):
+...   radlist[i] = v.strip()
+... 
+>>> radlist[1]
+'classical 2'
+>>> radlist[0]
+'classical 1'
+>>> radlist[0] in radrows[1]
+True
+>>> radlist[0] in radrows[2]
+True
+>>> radlist[0] in radrows[50]
+False
+>>> raddict = {}
+>>> for r in range(len(radlist)):
+...   for s in range(len(radrows)):
+...     if radlist[r] in radrows[s]:
+...       radlist[r].append(radrows[s][0])
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+AttributeError: 'str' object has no attribute 'append'
+>>> for r in range(len(radlist)):
+...   for s in range(len(radrows)):
+...     if radlist[r] in radrows[s]:
+...       radlist[index(r)].append(radrows[s][0])
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+NameError: name 'index' is not defined
+>>> for r in range(len(radlist)):
+...   for s in range(len(radrows)):
+...     if radlist[r] in radrows[s]:
+...       radlist[radlist.index(r)].append(radrows[s][0])
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+ValueError: 0 is not in list
+>>> for r in range(len(radlist)):
+...   for s in range(len(radrows)):
+...     if radlist[r] in radrows[s]:
+...       radlist[radlist.index(radlist[r])].append(radrows[s][0])
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 4, in <module>
+AttributeError: 'str' object has no attribute 'append'
+>>> for i, v in enumerate(radlist):
+...   for x, y in enumerate(radrows):
+...     radlist[r] = rad
+...     if rad in radrows[x]:
+...       radlist.append([rad][radrows[x][0])
+  File "<stdin>", line 5
+    radlist.append([rad][radrows[x][0])
+                                      ^
+SyntaxError: invalid syntax
+>>> for i, v in enumerate(radlist[:10]):
+...   print(i, v)
+... 
+0 classical 1
+1 classical 2
+2 classical 3
+3 classical 4
+4 classical 5
+5 classical 6
+6 classical 7
+7 classical 8
+8 classical 9
+9 classical 10
+>>> for i, v in enumerate(radlist):
+...   radlist[i] = []
+... 
+>>> radlist[0]
+[]
+>>> with open('radical_list.txt') as infile:
+...   radlist = infile.readlines()
+... 
+>>> for i,v in enumerate(radlist):
+...   radlist[i] = v.strip()
+... 
+>>> for i,v in enumerate(radlist):
+...   radlist[i] = radlist[i][]
+  File "<stdin>", line 2
+    radlist[i] = radlist[i][]
+                            ^
+SyntaxError: invalid syntax
+>>> 
+>>> for i,v in enumerate(radlist):
+...   radlist[i] = { radlist[i]: [] }
+... 
+>>> radlist[0]
+{'classical 1': []}
+>>> radlist[0][1]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 1
+>>> raddict = {}
+>>> 
+>>> for i,v in enumerate(radlist):
+...   for x, y in radlist[i]:
+...     raddict[x] = []
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+ValueError: too many values to unpack (expected 2)
+>>> radlist[0][1]
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: 1
+>>> radlist[0]
+{'classical 1': []}
+>>> radlist[0].items()
+dict_items([('classical 1', [])])
+>>> for i,v in enumerate(radlist):
+...   for x, y in radlist[i].items():
+...     raddict[x] = []
+... 
+>>> len(raddict)
+334
+>>> radrows[0]
+['kanji', 'radical1', 'radical2']
+>>> radrows.pop(0)
+['kanji', 'radical1', 'radical2']
+>>> radrows[0]
+['並', 'classical 1', 'nelson_c 12']
+>>> radrows[0][0]
+'並'
+>>> for i, v in enumerate(radrows):
+...   
+KeyboardInterrupt
+>>> for k, v in raddict.items():
+...   for i, j in enumerate(radrows):
+...     if k in j:
+...       raddict[k].append(j[0])
+... 
+>>> raddict['口']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '口'
+>>> raddict['classical 1']
+['並', '丗', '世', '上', '丈', '丘', '七', '弌', '一', '丁', '丂', '丄', '丅', '万', '三', '下', '丌', '不', '与', '丏', '丐', '丑', '丒', '𠀋', '且', '丕', '丙', '丞', '丟', '両', '㐂', '丣', '两', '亙', '再', '歪']
+>>> raddict['classical 2']
+['个', '丨', '丩', '丫', '中', '丮', '丯', '丰', '丱', '串', '丵', '州']
+>>> with open('radical_index.txt', encoding='utf-8', mode='w') as outfile:
+...   outfile.write(raddict)
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 2, in <module>
+TypeError: write() argument must be str, not dict
+>>> with open('radical_index.txt', encoding='utf-8', mode='w') as outfile:
+...   outfile.write(str(raddict))
+... 
+74708
+>>> len(radrows)
+13108
+>>> kanjiset = set()
+>>> for i, v in enumerate(radrows):
+...   radrows[i][0] = char
+...   kanjiset.add(char)
+... 
+>>> kanjidict = {k: {} for k in in kanjiset} 
+  File "<stdin>", line 1
+    kanjidict = {k: {} for k in in kanjiset} 
+                                 ^
+SyntaxError: invalid syntax
+>>> len(kanjiset)
+1
+>>> kanjiset
+{'甘'}
+>>> radrows[2]
+['甘', 'classical 1', 'nelson_c 2']
+>>> radrows[3]
+['甘', 'classical 1', 'nelson_c 25']
+>>> radrows[4]
+['甘', 'classical 1', 'nelson_c 4']
+>>> radrows[5]
+['甘', 'classical 1', 'nelson_c 4']
+>>> radrows[100]
+['甘', 'classical 102', '']
+>>> radrows[300]
+['甘', 'classical 104', '']
+>>> raddict['甘']
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+KeyError: '甘'
+>>> 
