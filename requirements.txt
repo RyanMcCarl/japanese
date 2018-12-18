@@ -68,7 +68,7 @@ sip==4.19.3
 six==1.11.0
 splitwise==1.1.0
 SQLAlchemy==1.1.14
-urllib3==1.22
+urllib3>=1.23
 vine==1.1.4
 virtualenv==15.1.0
 visitor==0.1.3
